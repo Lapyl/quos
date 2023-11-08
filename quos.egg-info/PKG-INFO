@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: quos
-Version: 0.0.3
+Version: 0.0.4
 Summary: Quos package for simulating quantum computing based on oscillatory quota
 Home-page: https://github.com/lapyl/quos
 Author: Lalit Patel
@@ -11,8 +11,8 @@ Classifier: Operating System :: OS Independent
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: networkx
 Requires-Dist: matplotlib
+Requires-Dist: networkx
 
 # Quos package
 
@@ -20,6 +20,7 @@ for simulating quantum computing based on oscillatory quota
 
 ### How to install
 
+pip install matplotlib networkx
 pip install quos
 
 ### How to upgrade
@@ -34,6 +35,11 @@ from quos import \*
 
 ### Modules included
 
+icons
+
 ### Version History
 
 - 0.0.1 2023-11-07 Initial release
+- 0.0.2 2023-11-07 Minor corrections
+- 0.0.3 2023-11-07 Minor corrections
+- 0.0.4 2023-11-07 Minor corrections

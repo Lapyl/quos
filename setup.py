@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="quos",
-    version="0.0.3",
+    version="0.0.4",
     author="Lalit Patel",
     author_email="llsr@att.net",
     description="Quos package for simulating quantum computing based on oscillatory quota",
@@ -20,8 +20,8 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'networkx',
         'matplotlib',
+        'networkx',
     ],
     package_data = {
         "quos": ["icons/**/*", "iconx/**/*"],

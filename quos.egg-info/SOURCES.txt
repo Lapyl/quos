@@ -11,6 +11,7 @@ quos/icons/Hadamard.jpg
 quos/icons/PauliX.jpg
 quos/icons/PauliY.jpg
 quos/icons/PauliZ.jpg
+quos/icons/__init__.py
 quos/iconx/i001.jpg
 quos/iconx/i002.jpg
 quos/iconx/i003.jpg

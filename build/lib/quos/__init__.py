@@ -1,6 +1,7 @@
-import networkx as nx
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
+import matplotlib.image as mim
+import networkx as nx
+import quos
 # =======================================================================
 
 def gblk():
@@ -32,7 +33,7 @@ def gixy(gbeg, aixy):
         pos.update({str(y)+'e':(mxx,-y)})
         G.add_edge(str(y)+'b', str(y)+'e', weight=1)
     for ixy in aixy:
-        img = mpimg.imread('icons/'+ixy[0]+'.jpg')
+        img = mim.imread((quos.__file__).replace('__init__.py','icons/' + ixy[0]+'.jpg'))
         x, y = ixy[1], -ixy[2]
         nam = str(ixy[1]*1000000+ixy[2])
         G.add_node(nam, image=img, pos=(x,y))
