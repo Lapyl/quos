@@ -4,56 +4,60 @@ from matplotlib.image import imread
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from quos import icons
 
-def qplt(ssgtq):
+def qplt(ssgqt):
     """
     Output: Matplotlib plot
-    sgtq: String of strings of gates times qubits:
-        Comma-concatenated string of space-concatenated strings of
-        gate-name str, time-number int, qubit-number int,
-        affected gate-name str, affected time-number int, affected qubit-number int
+    ssgqt : String of sgqt strings concatenated by pipe ('|')
+    sgqt  : String of g q t strings concatenated by comma
+    g     : String of item-name and applicable arguments strings concatenated by space
+    q     : Positive integer denoting qudit sequence number
+    t     : Positive integer denoting opertation time sequence number
     """
-    asgtq = ssgtq.split(',')
-    agtq = asgtq[0].split(" ")
-    t, q = int(agtq[1]), int(agtq[2])
-    tlo, tup, qlo, qup = t, t, q, q
-    for sgtq in asgtq:
-        agtq = sgtq.split(" ")
-        t, q = int(agtq[1]), int(agtq[2])
-        if (t < tlo): tlo = t
-        if (t > tup): tup = t
-        if (q < qlo): qlo = q
-        if (q > qup): qup = q
-        if len(agtq) > 3:
-            t, q = int(agtq[4]), int(agtq[5])
-            if (t < tlo): tlo = t
-            if (t > tup): tup = t
-            if (q < qlo): qlo = q
-            if (q > qup): qup = q
+    asgqt = ssgqt.split('|')
+    qmx, tmx = 0, 0
+    for sgqt in asgqt:
+        agqt = sgqt.split(",")
+        q, t = int(agqt[1]), int(agqt[2])
+        if (q > qmx): qmx = q
+        if (t > tmx): tmx = t
+        if len(agqt) > 3:
+            q, t = int(agqt[4]), int(agqt[5])
+            if (q > qmx): qmx = q
+            if (t > tmx): tmx = t
     fig = plt.figure()
     ax=fig.add_subplot(1,1,1)
-    ax.set_xlim(tlo-1, tup+1)
-    ax.set_ylim(-qup-1, -qlo+1)
+    ax.set_xlim(0, tmx+1)
+    ax.set_ylim(-qmx-1, 0)
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
-    for q in range(-qup,-qlo+1):
-        ax.axhline(q, color='red', lw=1)
-    if os.path.isfile('icons/H.jpg'):
+    if os.path.isfile('icons/0.jpg'):
         idir = 'icons/'
     else:
         idir = (icons.__file__).replace('__init__.py','')
-    for sgtq in asgtq:
-        agtq = sgtq.split(" ")
+    for q in range(1, qmx+1):
+        ax.axhline(-q, color='red', lw=1)
         ax.add_artist(AnnotationBbox(
-            OffsetImage(imread(idir + agtq[0]+'.jpg')),
-            (int(agtq[1]), -int(agtq[2])),
-            frameon=False))
-        if len(agtq) > 3:
+            OffsetImage(imread(idir +'0.jpg')),
+            (0, -q), frameon=False))
+    for sgqt in asgqt:
+        agqt = sgqt.split(",")
+        g = agqt[0].split(" ")[0]
+        q, t = int(agqt[1]), int(agqt[2])
+        if (g=="0" or g=="1") and t==0:
             ax.add_artist(AnnotationBbox(
-                OffsetImage(imread(idir + agtq[3]+'.jpg')),
-                (int(agtq[4]), -int(agtq[5])),
-                frameon=False))
-            plt.plot([float(agtq[1]),float(agtq[4])],
-                [-float(agtq[2]),-float(agtq[5])], 'b')
+                OffsetImage(imread(idir + g + '.jpg')),
+                (0, -q), frameon=False))
+        if q > 0 and t> 0:
+            ax.add_artist(AnnotationBbox(
+                OffsetImage(imread(idir + g + '.jpg')),
+                (t, -q), frameon=False))
+            if len(agqt) > 3:
+                g, q1, t1 = agqt[3].split(" ")[0], int(agqt[4]), int(agqt[5])
+                if q > 0 and t> 0:
+                    ax.add_artist(AnnotationBbox(
+                        OffsetImage(imread(idir + g + '.jpg')),
+                        (t1, -q1), frameon=False))
+                    plt.plot([t,t1], [-q,-q1], 'b')
     plt.show()
 
-# qplt('H 1 1,X 1 2,Z 2 3,Y 2 4,C 3 1 X 3 3,H 4 2')
+# qplt('1,3,0|H,1,1|X,2,1|Z,3,2|Y,4,2|C,1,3,X,3,3|RX 30,2,4|R 30 30 60,3,4')
