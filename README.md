@@ -11,11 +11,10 @@ pip install quos
 
 pip install --upgrade quos
 
-### For information
+### To open information page
 
 import quos
-quos.qdoc() # to open Quos.html
-quos.qdoc('w') # to open Wiki.html
+quos.qdoc()
 
 ## To plot a circuit
 
@@ -44,29 +43,33 @@ quos.qplt('1,3,0|H,1,1|X,2,1|Z,3,2|Y,4,2|C,1,3,X,3,3|Rx 30,2,4|R 30 30 60,3,4|Cd
 - V (V gate) on qudit 4 at time 7
 - iSw (imaginary swap) qubit 1 at time 8 with qubit 4 at time 6
 
-## Included single gates
+## Gates included
 
-I: Identity
-H: Hadamard
-X: (Pauli) X gate
-Y: (Pauli) Y gate
-Z: (Pauli) Z gate
-T: T (Pi/8 phase gate)
-Ph: Global phase gate
-Pp: Phase gate for second state
-V: V (sqrt X) phase
-S: S (squrt Z) phase
-Rx: Rotation around X
-Ry: Rotation around Y
-Rz: Rotation around Z
-R: Rotation around arbitrary axis
+- Qubits:
+- 0: qubit in state 0
+- 1: Qubit in state 1
 
-# Included double gates
+- Individual gates:
+- I: Identity
+- T: T (Pi/8 phase gate)
+- Ph: Global phase gate
+- Pp: Phase gate for second state
+- H: Hadamard
+- X: (Pauli) X gate
+- Y: (Pauli) Y gate
+- Z: (Pauli) Z gate
+- Rx: Rotation around X
+- Ry: Rotation around Y
+- Rz: Rotation around Z
+- R: Rotation around arbitrary axis
+- V: V (sqrt X) phase
+- S: S (sqrt Z) phase
 
-C: Controls another gate
-Cd: Reverse-controls another gate
-Sw: Swaps with another gate
-iSw: Imaginary swaps with another gate
+- Interactive gates
+- C: Controls another gate
+- Cd: Reverse-controls another gate
+- Sw: Swaps with another gate
+- iSw: Imaginary swaps with another gate
 
 ### Version History
 
@@ -77,4 +80,4 @@ iSw: Imaginary swaps with another gate
 - 0.0.5 2023-11-09 Removed dependancy on networkx package
 - 0.0.6 2023-11-09 Enabled plotting of CNOT gate
 - 0.0.7 2023-11-10 Enabled arguments and plotting of qubits
-- 0.0.8 2023-11-13 Enabled several other gates
+- 0.0.8 2023-11-14 Enabled several other gates

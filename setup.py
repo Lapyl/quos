@@ -20,5 +20,5 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=["matplotlib"],
-    package_data={"quos": ["html/*","icons/*","icons/w/*"],},
+    package_data={"quos": ["*.html", "icons/*","icons/w/*"],},
 )

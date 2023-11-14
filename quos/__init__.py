@@ -2,18 +2,13 @@ import os
 import matplotlib.pyplot as plt
 from matplotlib.image import imread
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
-from quos import icons
 import webbrowser
 
-def qdoc(s='q'):
+def qdoc():
     """
     Output: Html list of various gates
-    s : Option string 'q' or 'w'
     """
-    zurl=r'Quos.html'
-    if s=='w':
-        zurl="html/Wiki.html"
-    webbrowser.open(zurl, new=2)
+    webbrowser.open("qdoc.html", new=2)
 
 def qplt(ssgqt):
     """
@@ -41,10 +36,9 @@ def qplt(ssgqt):
     ax.set_ylim(-qmx-1, 0)
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
+    idir = 'icons/'
     if os.path.isfile('icons/0.jpg'):
-        idir = 'icons/'
-    else:
-        idir = (icons.__file__).replace('__init__.py','')
+        idir = (__file__).replace('__init__.py','') + idir
     for q in range(1, qmx+1):
         ax.axhline(-q, color='red', lw=1)
         ax.add_artist(AnnotationBbox(
@@ -80,4 +74,10 @@ def qsim(ssgqt):
     q     : Positive integer denoting qudit sequence number
     t     : Positive integer denoting opertation time sequence number
     """
-    print("This is to test qsim.")
+    print(ssgqt)
+
+'''
+qsim("This is to test qsim.")
+qdoc()
+qplt('1,3,0|H,1,1|X,2,1|Z,3,2|Y,4,2|C,1,3,X,3,3|Rx 30,2,4|R 30 30 60,3,4|Cd,4,5,H,3,6|Ph 15,1,5|Pp 45,2,5|Ry 45,4,6|Sw,1,6,Sw,2,6|S,4,4|Rz 15,1,7|T,3,7|V,4,7|iSw,1,8,iSw,4,8')
+'''
