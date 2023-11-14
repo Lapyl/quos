@@ -4,22 +4,22 @@ Quos package simplifies plotting and simulating a quantum computing circuit empl
 
 ### To install
 
-pip install matplotlib
-pip install quos
+    pip install matplotlib
+    pip install quos
 
 ### To upgrade
 
-pip install --upgrade quos
+    pip install --upgrade quos
 
 ### To open information page
 
-import quos
-quos.qdoc()
+    import quos
+    quos.qdoc()
 
 ## To plot a circuit
 
-import quos
-quos.qplt('1,3,0|H,1,1|X,2,1|Z,3,2|Y,4,2|C,1,3,X,3,3|Rx 30,2,4|R 30 30 60,3,4|Cd,4,5,H,3,6|Ph 15,1,5|Pp 45,2,5|Ry 45,4,6|Sw,1,6,Sw,2,6|S,4,4|Rz 15,1,7|T,3,7|V,4,7|iSw,1,8,iSw,4,8')
+    import quos
+    quos.qplt('1,3,0|H,1,1|X,2,1|Z,3,2|Y,4,2|C,1,3,X,3,3|Rx 30,2,4|R 30 30 60,3,4|Cd,4,5,H,3,6|Ph 15,1,5|Pp 45,2,5|Ry 45,4,6|Sw,1,6,Sw,2,6|S,4,4|Rz 15,1,7|T,3,7|V,4,7|iSw,1,8,iSw,4,8')
 
 - Q0 (qudit 0) on qudit other than 3 at time 0
 - Q0 (qudit 1) on qubit 3 at time 0
