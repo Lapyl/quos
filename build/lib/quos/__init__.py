@@ -3,6 +3,17 @@ import matplotlib.pyplot as plt
 from matplotlib.image import imread
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from quos import icons
+import webbrowser
+
+def qdoc(s='q'):
+    """
+    Output: Html list of various gates
+    s : Option string 'q' or 'w'
+    """
+    zurl=r'Quos.html'
+    if s=='w':
+        zurl="html/Wiki.html"
+    webbrowser.open(zurl, new=2)
 
 def qplt(ssgqt):
     """
@@ -43,11 +54,11 @@ def qplt(ssgqt):
         agqt = sgqt.split(",")
         g = agqt[0].split(" ")[0]
         q, t = int(agqt[1]), int(agqt[2])
-        if (g=="0" or g=="1") and t==0:
+        if (t==0) and (q>0) and (g=="1"):
             ax.add_artist(AnnotationBbox(
-                OffsetImage(imread(idir + g + '.jpg')),
+                OffsetImage(imread(idir + '1.jpg')),
                 (0, -q), frameon=False))
-        if q > 0 and t> 0:
+        if (t>0) and (q>0) and (g in ['0','1','C','Cd','H','I','iSw','Ph','Pp','R','Rx','Ry','Rz','S','Sw','T','V','X','Y','Z']):
             ax.add_artist(AnnotationBbox(
                 OffsetImage(imread(idir + g + '.jpg')),
                 (t, -q), frameon=False))
@@ -60,4 +71,13 @@ def qplt(ssgqt):
                     plt.plot([t,t1], [-q,-q1], 'b')
     plt.show()
 
-# qplt('1,3,0|H,1,1|X,2,1|Z,3,2|Y,4,2|C,1,3,X,3,3|RX 30,2,4|R 30 30 60,3,4')
+def qsim(ssgqt):
+    """
+    Output: Matplotlib plot
+    ssgqt : String of sgqt strings concatenated by pipe ('|')
+    sgqt  : String of g q t strings concatenated by comma
+    g     : String of item-name and applicable arguments strings concatenated by space
+    q     : Positive integer denoting qudit sequence number
+    t     : Positive integer denoting opertation time sequence number
+    """
+    print("This is to test qsim.")
