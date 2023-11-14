@@ -45,31 +45,31 @@ Quos package simplifies plotting and simulating a quantum computing circuit empl
 
 ## Gates included
 
-Qubits:
-0: qubit in state 0
-1: Qubit in state 1
+- Qubits:
+- 0: qubit in state 0
+- 1: Qubit in state 1
 
-Individual gates:
-I: Identity
-T: T (Pi/8 phase gate)
-Ph: Global phase gate
-Pp: Phase gate for second state
-H: Hadamard
-X: (Pauli) X gate
-Y: (Pauli) Y gate
-Z: (Pauli) Z gate
-Rx: Rotation around X
-Ry: Rotation around Y
-Rz: Rotation around Z
-R: Rotation around arbitrary axis
-V: V (sqrt X) phase
-S: S (sqrt Z) phase
+- Individual gates:
+- I: Identity
+- T: T (Pi/8 phase gate)
+- Ph: Global phase gate
+- Pp: Phase gate for second state
+- H: Hadamard
+- X: (Pauli) X gate
+- Y: (Pauli) Y gate
+- Z: (Pauli) Z gate
+- Rx: Rotation around X
+- Ry: Rotation around Y
+- Rz: Rotation around Z
+- R: Rotation around arbitrary axis
+- V: V (sqrt X) phase
+- S: S (sqrt Z) phase
 
-Interactive gates
-C: Controls another gate
-Cd: Reverse-controls another gate
-Sw: Swaps with another gate
-iSw: Imaginary swaps with another gate
+- Interactive gates
+- C: Controls another gate
+- Cd: Reverse-controls another gate
+- Sw: Swaps with another gate
+- iSw: Imaginary swaps with another gate
 
 ### Version History
 
