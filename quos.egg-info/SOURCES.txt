@@ -14,12 +14,12 @@ quos/icons/C.jpg
 quos/icons/Cd.jpg
 quos/icons/H.jpg
 quos/icons/I.jpg
+quos/icons/K.jpg
+quos/icons/M.jpg
+quos/icons/O.jpg
 quos/icons/Ph.jpg
 quos/icons/Pp.jpg
 quos/icons/R.jpg
-quos/icons/RX.jpg
-quos/icons/RY.jpg
-quos/icons/RZ.jpg
 quos/icons/Rx.jpg
 quos/icons/Ry.jpg
 quos/icons/Rz.jpg

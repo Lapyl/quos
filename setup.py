@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="quos",
-    version="0.0.8",
+    version="0.0.9",
     author="Lalit Patel",
     author_email="LLSR@att.net",
     description="Quos package simplifies plotting and simulating a quantum computing circuit employing oscillatory qudits.",
