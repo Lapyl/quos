@@ -2,7 +2,8 @@ LICENSE
 README.md
 setup.py
 quos/__init__.py
-quos/qdoc.html
+quos/quos.html
+quos/quos.xlsm
 quos.egg-info/PKG-INFO
 quos.egg-info/SOURCES.txt
 quos.egg-info/dependency_links.txt

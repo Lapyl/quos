@@ -3,16 +3,48 @@ import matplotlib.pyplot as plt
 from matplotlib.image import imread
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
-
-def qdoc():
+def qhtm():
     """
-    Output: Html list of various gates
+    Output: quos.html webpage with a list of various gates
     """
     import webbrowser
     try:
-        webbrowser.open((__file__).replace('__init__.py','') + "qdoc.html")
+        webbrowser.open((__file__).replace('__init__.py','') + "quos.html")
     except:
-        webbrowser.open("qdoc.html") #  new=2)
+        webbrowser.open("quos.html")
+
+def qxls():
+    """
+    Output: quos.xlsm Excel file with a macro to create a plot of specified gates
+    """
+    from pathlib import Path
+    import shutil
+    try:
+        zdst = str(os.path.join(Path.home(), "Downloads"))
+    except:
+        zdst = str(Path.home() / "Downloads")    
+    try:
+        shutil.copy((__file__).replace('__init__.py','') + "quos.xlsm", zdst + "/quos.xlsm")         
+    except:
+        shutil.copy("quos.xlsm",  zdst + "/quos.xlsm")
+
+def qstr(xlsm='quos.xlsm', wsht='Gates'):
+    """
+    Output: String of sgqt strings concatenated by pipe ('|')
+    xlsm  : Excel file with a specification of gates
+    """
+    import pandas as pd
+    xdf = pd.read_excel(xlsm, sheet_name=wsht, header=None)
+    txt = ""
+    for col in range(0, xdf.shape[1]):
+        for row in range(0, xdf.shape[0]):
+            cel = str(xdf.iloc[row, col])
+            if (cel.lower() != "nan"):
+                txt = txt + cel + "," + str(row+1) + "," + str(col+1) + "|"
+    if txt=="":
+        txt = '1,3,0|H,1,1|X,2,1|Z,3,2|Y,4,2|C,1,3,X,3,3|K,4,3|Rx 30,2,4|R 30 30 60,3,4|Cd,4,5,H,3,6|Ph 15,1,5|Pp 45,2,5|Ry 45,4,6|Sw,1,6,Sw,2,6|S,4,4|Rz 15,1,7|T,3,7|V,4,7|O,a,8|iSw,1,9,iSw,4,9|M,a,10'
+    print(txt)
+    return txt
 
 def qplt(ssgqt):
     """
@@ -94,6 +126,7 @@ def qsim(ssgqt):
 
 '''
 qsim("This is to test qsim.")
-qdoc()
+qxls()
+qhtm()
 qplt('1,3,0|H,1,1|X,2,1|Z,3,2|Y,4,2|C,1,3,X,3,3|K,4,3|Rx 30,2,4|R 30 30 60,3,4|Cd,4,5,H,3,6|Ph 15,1,5|Pp 45,2,5|Ry 45,4,6|Sw,1,6,Sw,2,6|S,4,4|Rz 15,1,7|T,3,7|V,4,7|O,a,8|iSw,1,9,iSw,4,9|M,a,10')
 '''

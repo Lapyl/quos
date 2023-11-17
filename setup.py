@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="quos",
-    version="0.0.9",
+    version="0.0.10",
     author="Lalit Patel",
     author_email="LLSR@att.net",
     description="Quos package simplifies plotting and simulating a quantum computing circuit employing oscillatory qudits.",
@@ -20,5 +20,5 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=["matplotlib"],
-    package_data={"quos": ["*.html", "icons/*","icons/w/*"],},
+    package_data={"quos": ["*.html","*.xlsm","icons/*","icons/w/*"],},
 )
