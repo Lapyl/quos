@@ -42,7 +42,10 @@ def qstr(xlsm='quos.xlsm', wsht='Gates'):
             if (cel.lower() != "nan"):
                 txt = txt + cel + "," + str(row+1) + "," + str(col+1) + "|"
     if txt=="":
-        txt = '1,3,0|H,1,1|X,2,1|Z,3,2|Y,4,2|C,1,3,X,3,3|K,4,3|Rx 30,2,4|R 30 30 60,3,4|Cd,4,5,H,3,6|Ph 15,1,5|Pp 45,2,5|Ry 45,4,6|Sw,1,6,Sw,2,6|S,4,4|Rz 15,1,7|T,3,7|V,4,7|O,a,8|iSw,1,9,iSw,4,9|M,a,10'
+        txt = '1,3,0|Q 30 15,5,0|H a,1,1|Y,1,2|Z,2,2|X,3,2|Y,4,2|Z,5,2|X,6,2|S,2,3|T,4,3|V,6,3|'
+        txt = txt + 'Rx 30,1,4|Ry 15,2,4|Rz 15,3,4|Rz 30,4,4|Ry 15,5,4|Rx 15,6,4|Ph 15,2,5|'
+        txt = txt + 'Pp 30,4,5|O a,1,6|Cd,1,7,Ph 15,2,7|K,3,7|U 30 30 15,4,7|U 15 15 30,6,7|'
+        txt = txt + 'C,1,8,X,2,9|Sw,4,8,Sw,6,8|iSw,3,9,iSw,4,9|M a,1,10|'
     print(txt)
     return txt
 
@@ -90,12 +93,12 @@ def qplt(ssgqt):
             r = range(1,qmx+1)
         else:
             r = [int(q)]
-        if (t==0) and (g=="1"):
+        if (t==0) and ((g=="1") or (g=="Q")):
             for p in r:
                 ax.add_artist(AnnotationBbox(
-                    OffsetImage(imread(idir + '1.jpg')),
+                    OffsetImage(imread(idir + g +'.jpg')),
                     (0, -p), frameon=False))
-        if (t>0) and (g in ['0','1','C','Cd','H','I','iSw','K','M','O','Ph','Pp','R','Rx','Ry','Rz','S','Sw','T','V','X','Y','Z']):
+        if (t>0) and (g in ['0','1','Q','I','H','X','Y','Z','S','T','V','Rx','Ry','Rz','Ph','Pp','U','C','Cd','Sw','iSw','M','O','K']):
             for p in r:
                 ax.add_artist(AnnotationBbox(
                     OffsetImage(imread(idir + g + '.jpg')),
@@ -128,5 +131,9 @@ def qsim(ssgqt):
 qsim("This is to test qsim.")
 qxls()
 qhtm()
-qplt('1,3,0|H,1,1|X,2,1|Z,3,2|Y,4,2|C,1,3,X,3,3|K,4,3|Rx 30,2,4|R 30 30 60,3,4|Cd,4,5,H,3,6|Ph 15,1,5|Pp 45,2,5|Ry 45,4,6|Sw,1,6,Sw,2,6|S,4,4|Rz 15,1,7|T,3,7|V,4,7|O,a,8|iSw,1,9,iSw,4,9|M,a,10')
+txt = '1,3,0|Q 30 15,5,0|H a,1,1|Y,1,2|Z,2,2|X,3,2|Y,4,2|Z,5,2|X,6,2|S,2,3|T,4,3|V,6,3|'
+txt = txt + 'Rx 30,1,4|Ry 15,2,4|Rz 15,3,4|Rz 30,4,4|Ry 15,5,4|Rx 15,6,4|Ph 15,2,5|'
+txt = txt + 'Pp 30,4,5|O a,1,6|Cd,1,7,Ph 15,2,7|K,3,7|U 30 30 15,4,7|U 15 15 30,6,7|'
+txt = txt + 'C,1,8,X,2,9|Sw,4,8,Sw,6,8|iSw,3,9,iSw,4,9|M a,1,10'
+qplt(txt)
 '''

@@ -29,31 +29,28 @@ Quos package simplifies plotting and simulating a quantum computing circuit empl
 ### To plot a circuit
 
     import quos
-    quos.qplt('1,3,0|H,1,1|X,2,1|Z,3,2|Y,4,2|C,1,3,X,3,3|K,4,3|Rx 30,2,4|R 30 30 60,3,4|Cd,4,5,H,3,6|Ph 15,1,5|Pp 45,2,5|Ry 45,4,6|Sw,1,6,Sw,2,6|S,4,4|Rz 15,1,7|T,3,7|V,4,7|O,a,8|iSw,1,9,iSw,4,9|M,a,10')
+    txt = '1,3,0|Q 30 15,5,0|H a,1,1|Y,1,2|Z,2,2|X,3,2|Y,4,2|Z,5,2|X,6,2|S,2,3|T,4,3|V,6,3|'
+    txt = txt + 'Rx 30,1,4|Ry 15,2,4|Rz 15,3,4|Rz 30,4,4|Ry 15,5,4|Rx 15,6,4|Ph 15,2,5|'
+    txt = txt + 'Pp 30,4,5|O a,1,6|Cd,1,7,Ph 15,2,7|K,3,7|U 30 30 15,4,7|U 15 15 30,6,7|'
+    txt = txt + 'C,1,8,X,2,9|Sw,4,8,Sw,6,8|iSw,3,9,iSw,4,9|M a,1,10'
+    quos.qplt(txt)
 
-- Q0 (qubit 0) on qubit other than 3 at time 0
-- Q0 (qubit 1) on qubit 3 at time 0
-- H (Hadamard gate) on qubit 1 at time 1
-- X (Pauli X gate) on qubit 2 at time 1
-- Z (Pauli Z gate) on qubit 3 at time 2
-- Y (Pauli Y gate) on qubit 4 at time 2
-- C (control point) on qubit 1 at time 3 controlling
-- X (Pauli X gate) on qubit 3 at time 3
-- K (Komparator gate) on qubit 4 at time 3
-- Rx (rotation by 30 around X) on qubit 2 at time 4
-- R (rotation by 30 30 60 around X Y Z) on qubit 3 at time 4
-- Cd (reverse control point) on qubit 4 at time 5 controlling
-- H (Hadamard gate) on qubit 3 at time 6
-- Ph (global phase gate by 15) on qubit 1 at time 5
-- Pp (phase gate for second state by 45) on qubit 2 at time 5
-- Ry (rotation by 45 around Y) on qubit 4 at time 6
-- Sw (swap) qubit 1 at time 6 with qubit 2 at time 6
-- S (S gate) on qubit 4 at time 4
-- Rz (rotation by 15 around Z) on qubit 1 at time 7
-- T (T gate) on qubit 3 at time 7
-- V (V gate) on qubit 4 at time 7
-- O (Observer gate) on all qubits at time 8
-- iSw (imaginary swap) qubit 1 at time 9 with qubit 4 at time 9
+- 1 (qubit 1) on qubit 3 at time 0
+- Q 30 15 (qubit with angles 30 15) on qubit 5 at time 0
+- 0 (qubit 0) on other qubits at time 0
+- H (Hadamard gate) on all qubits at time 1
+- Y (Pauli Y gate) on qubit 1 at time 2 ...
+- S (S gate) on qubit 2 at time 3 ...
+- Rx 30 (rotation by 30 around X) on qubit 2 at time 4 ...
+- Ph 15 (global phase gate by 15) on qubit 2 at time 5
+- Pp 30 (phase gate for second state by 30) on qubit 4 at time 5
+- O (Observer gate) on all qubits at time 6
+- Cd (reverse control point) on qubit 1 at time 7 controlling Ph 15 on qubit 2 at time 7
+- K (Komparator gate) on qubit 3 at time 7
+- U 30 30 15 (rotation by 30 30 15 around X Y Z) on qubit 4 at time 7 ...
+- C (control point) on qubit 1 at time 8 controlling X on qubit 2 at time 9
+- Sw (swap) qubit 4 at time 8 with qubit 6 at time 8
+- iSw (imaginary swap) qubit 3 at time 9 with qubit 4 at time 9
 - M (Measurement gate) on all qubits at time 10
 
 ### To simulate a circuit
@@ -65,22 +62,27 @@ Under construction ...
 - Qubits
 - 0: qubit in state 0
 - 1: Qubit in state 1
+- Q: Qubit in an arbitrary state specified by two angle arguments
 
-- Individual gates
+- Individual gates without any argument
 - I: Identity
-- T: T (Pi/8 phase gate)
-- Ph: Global phase gate: Needs angle
-- Pp: Phase gate for second state: Needs angle
 - H: Hadamard
 - X: (Pauli) X gate
 - Y: (Pauli) Y gate
 - Z: (Pauli) Z gate
-- Rx: Rotation around X: Needs angle
-- Ry: Rotation around Y: Needs angle
-- Rz: Rotation around Z: Needs angle
-- R: Rotation around arbitrary axis: Needs 3 angles
-- V: V (sqrt X) phase
 - S: S (sqrt Z) phase
+- T: T (Pi/8 phase gate)
+- V: V (sqrt X) phase
+
+- Individual gates with one angle argument
+- Rx: Rotation around X
+- Ry: Rotation around Y
+- Rz: Rotation around Z
+- Ph: Global phase gate
+- Pp: Phase gate for second state
+
+- Individual gates with three angle arguments
+- U: Universal rotation around arbitrary axis
 
 - Interactive gates
 - C: Controls another gate: Needs affected gate
@@ -88,7 +90,7 @@ Under construction ...
 - Sw: Swaps with another gate: Needs connected Sw
 - iSw: Imaginary swaps with another gate: Needs connected iSw
 
-- Measurement related
+- Measurement related gates
 - M: Measurement gate
 - O: Observation gate
 - K: Komparator (Comparator) gate
@@ -107,3 +109,4 @@ These gates can work for qudits as well as qubits.
 - 0.0.8 2023-11-14 Enabled several other gates
 - 0.0.9 2023-11-15 Enabled measurement gates
 - 0.0.10 2023-11-16 Enabled Excel file output
+- 0.0.11 2023-11-20 Enabled simulation in Excel file
