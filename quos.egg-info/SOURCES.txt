@@ -2,6 +2,7 @@ LICENSE
 README.md
 setup.py
 quos/__init__.py
+quos/qblo.xlsm
 quos/quos.html
 quos/quos.xlsm
 quos.egg-info/PKG-INFO
