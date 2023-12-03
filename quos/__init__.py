@@ -216,7 +216,6 @@ def qblo(dtqr):
     ztmx = int(dtqr['Time'].max())+1
     zque = dtqr['Qubi'].unique()
     zquc = len(zque)
-    print(str(ztmx) + " " + str(zque) + " " + str(zquc))
     zfig, zaxs = plt.subplots(zquc, ztmx)
     zavs = 3.1457/6.0 #Angle between vertical and slented lines
 
@@ -237,16 +236,22 @@ def qblo(dtqr):
             zaxe.get_xaxis().set_ticks([])
             zaxe.get_yaxis().set_ticks([])
 
+            zaxe.add_patch(Circle(xy=(1.0,1.0), radius=1.0, edgecolor='gray', fill=False, lw=zlwt))
+            zaxe.add_patch(Ellipse(xy=(1.0,1.0), width=2.0, height=0.6, edgecolor='gray', fc='None', lw=zlwt))
+            zaxe.plot([1.0,1.0], [1.0,2.2], color='gray', lw=zlwt)
+            zaxe.plot([1.0,2.2], [1.0,1.0], color='gray', lw=zlwt)
+            zaxe.plot([1.0,0.6], [1.0,0.6], color='gray', lw=zlwt)
+            
             if (len(dtqr[(dtqr['Time']==ztim) & (dtqr['Qubi']==zquv)])>0):
 
-                zres = dtqr[(dtqr['Time']==ztim) & (dtqr['Qubi']==zquv)].iloc[0,2]
+                zres = (dtqr[(dtqr['Time']==ztim) & (dtqr['Qubi']==zquv)].iloc[0,2]).split("|")
                 zq0r = qstn(zres[0], False)
                 zq0i = qstn(zres[1], False)
                 zq1r = qstn(zres[2], False)
                 zq1i = qstn(zres[3], False)
 
                 try:
-                    ztha = round(1.57285 + 1.57285 * (-zq0r * zq0r - zq0i * zq0i + zq1r * zq1r + zq1i * zq1i) / (
+                    ztha = round(1.57285 + 1.57285 * (zq0r * zq0r + zq0i * zq0i - zq1r * zq1r - zq1i * zq1i) / (
                         zq0r * zq0r + zq0i * zq0i + zq1r * zq1r + zq1i * zq1i), 4)
                     zphi = round(1.57285 * (zq0r * zq0i + zq0r * zq1i + zq1r * zq0i + zq1r * zq1i) / (
                         zq0r * zq0r + zq0i * zq0i + zq1r * zq1r + zq1i * zq1i), 4)
@@ -257,12 +262,8 @@ def qblo(dtqr):
                 zxad = round(math.sin(ztha) * math.cos(zphj), 4)
                 zyad = -round(math.cos(ztha), 4)
 
+                # print(str(ztim) + " " + zquv + " " + str(zq0r) + " " + str(zq0i) + " " + str(zq1r) + " " + str(zq1i) + " " + str(ztha) + " " + str(zphi) + " " + str(zphj) + " " + str(zxad) + " " + str(zyad))
                 zaxe.plot([1.0,1.0+zxad], [1.0,1.0+zyad], color="red", lw=3.0)
-                zaxe.add_patch(Circle(xy=(1.0,1.0), radius=1.0, edgecolor='gray', fill=False, lw=zlwt))
-                zaxe.add_patch(Ellipse(xy=(1.0,1.0), width=2.0, height=0.6, edgecolor='gray', fc='None', lw=zlwt))
-                zaxe.plot([1.0,1.0], [1.0,2.2], color='gray', lw=zlwt)
-                zaxe.plot([1.0,2.2], [1.0,1.0], color='gray', lw=zlwt)
-                zaxe.plot([1.0,0.6], [1.0,0.6], color='gray', lw=zlwt)       
                 if (zlwt==1.0): zlwt=0.1
 
     zfig.savefig("qplt.jpg")
@@ -289,77 +290,77 @@ def qsim(ssgqt):
         agqt = (sgqt + ",,,,,").split(",")
         i1, q1, t1, i2, q2, t2 = agqt[0], agqt[1], qstn(agqt[2]), agqt[3], agqt[4], qstn(agqt[5])
         zdf0 = pd.concat([zdf0, pd.DataFrame([[i1, q1, t1, i2, q2, t2, ""]], columns=zco0)], ignore_index=True)
-    zdft = zdf0["Time1"].unique()
-    zdfq = zdf0[zdf0["Qubi1"] != "a"]["Qubi1"].unique()
-
-    for zti1 in zdft:
-        zdfa = zdf0[(zdf0["Qubi1"]=="a") & (zdf0["Time1"]==zti1)][zco0]
+    zlt1 = zdf0["Time1"].unique()
+    zlq1 = zdf0[zdf0["Qubi1"] != "a"]["Qubi1"].unique()
+    for zet1 in zlt1:
+        zdfa = zdf0[(zdf0["Qubi1"]=="a") & (zdf0["Time1"]==zet1)][zco0]
         if len(zdfa)>0:
-            for zqu1 in zdfq:
-                zdf0 = pd.concat([zdf0, pd.DataFrame([[zdfa.iloc[0,0], zqu1, zti1, "", "", 0, ""]], columns=zco0)], ignore_index=True)
+            for zeq1 in zlq1:
+                zdf0 = pd.concat([zdf0, pd.DataFrame([[zdfa.iloc[0,0], zeq1, zet1, "", "", 0, ""]], columns=zco0)], ignore_index=True)
 
-    for zqu1 in zdfq:
-        if len(zdf0[(zdf0["Qubi1"]==zqu1) & (zdf0["Time1"]=="0")])<1:
-            zdf1 = pd.concat([zdf1, pd.DataFrame([[0, zqu1, "1|0|0|0"]], columns=zco1)], ignore_index=True)
-        else:
-            if len(zdf0[(zdf0["Qubi1"]==zqu1) & (zdf0["Time1"]=="0") & (zdf0["Item1"]=="0")])>1:
-                zdf1 = pd.concat([zdf1, pd.DataFrame([0, zqu1, "1|0|0|0"], columns=zco1)], ignore_index=True)
-            else:
-                if len(zdf0[(zdf0["Qubi1"]==zqu1) & (zdf0["Time1"]=="0") & (zdf0["Item1"]=="1")])>1:
-                    zdf1 = pd.concat([zdf1, pd.DataFrame([0, zqu1, "0|0|1|0"], columns=zco1)], ignore_index=True)
-                else:
-                    if len(zdf0[(zdf0["Qubi1"]==zqu1) & (zdf0["Time1"]=="0") & (zdf0["Item1"][0]=="Q")])>1:
-                        zres = (zdf0[zdf0["Qubi1"]==zqu1 & zdf0["Time1"]=="0" &  zdf0["Item1"][0]=="Q"][0] + "   ").split(" ")
-                        zag1 = float(zres[1])
-                        zag2 = float(zres[2])
-                        zres = str(round(math.cos(zag1)*math.cos(zag2),4)) + "|" + str(round(math.cos(zag1)*math.sin(zag2),4)) + "|" + str(round(math.sin(zag1)*math.cos(zag2),4)) + "|" + str(round(math.sin(zag1)*math.sin(zag2),4))
-                        zdf1 = pd.concat([zdf1, pd.DataFrame([0, zqu1, zres], columns=zco1)], ignore_index=True)
-
-    for zti1 in range(1, int(zdft.max())):
-        for zqu1 in zdfq:
-            zlin = zdf0[(zdf0["Time1"]==zti1) & (zdf0["Qubi1"]==zqu1)][zco0]
+    zls1 = zdf0[(zdf0["Item1"]=="1") & (zdf0["Time1"]==0)]["Qubi1"].unique()
+    zdfq = zdf0[(zdf0["Item1"].map(lambda x: x.startswith('Q'))) & (zdf0["Time1"]==0)]
+    if len(zdfq)>0:
+        for zeqq in range(len(zdfq)):
+            zag1 = float(zdfq.iloc[zeqq,0].split(" ")[1])
+            zag2 = float(zdfq.iloc[zeqq,0].split(" ")[2])
+            zres = str(round(math.cos(zag1)*math.cos(zag2),4)) + "|" + str(round(math.cos(zag1)*math.sin(zag2),4)) + "|" + str(round(math.sin(zag1)*math.cos(zag2),4)) + "|" + str(round(math.sin(zag1)*math.sin(zag2),4))
+            zdf1 = pd.concat([zdf1, pd.DataFrame([[0, zdfq.iloc[zeqq,1], zres]], columns=zco1)], ignore_index=True)
+    if len(zls1)>0:
+        for zeq1 in zls1:        
+            zdf1 = pd.concat([zdf1, pd.DataFrame([[0, zeq1, "0|0|1|0"]], columns=zco1)], ignore_index=True)
+    for zeqa in zlq1:
+        if ((zeqa not in zls1) & (zeqa not in zdfq["Qubi1"].unique())):
+            zdf1 = pd.concat([zdf1, pd.DataFrame([[0, zeqa, "1|0|0|0"]], columns=zco1)], ignore_index=True)
+    
+    for zet1 in range(1, int(zlt1.max())+1):
+        for zeq1 in zlq1:
+            zlin = zdf0[(zdf0["Time1"]==zet1) & (zdf0["Qubi1"]==zeq1)][zco0]
             zad1 = []
             zad2 = []
-            if (len(zdf1[(zdf1["Time"]==zti1) & (zdf1["Qubi"]==zqu1)])<1):
+            if (len(zdf1[(zdf1["Time"]==zet1) & (zdf1["Qubi"]==zeq1)])<1):
                 try:
-                    zad1 = [zti1, zqu1, zdf1[(zdf1["Time"]==zti1-1) & (zdf1["Qubi"]==zqu1)].iloc[0,2]]
+                    zad1 = [zet1, zeq1, zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)].iloc[0,2]]
                 except:
-                    zad1 = [zti1, zqu1, "0|0|0|0"]
+                    zad1 = [zet1, zeq1, "0|0|0|0"]
             if (zlin.shape[0]>0):
-                zit1,zit2,zqu2,zti2,zres = zlin.iloc[0,0],zlin.iloc[0,3],zlin.iloc[0,4],zlin.iloc[0,5],zlin.iloc[0,6]
+                zit1,zit2,zqu2,zti2,zres = zlin.iloc[0,0],zlin.iloc[0,3],zlin.iloc[0,4],qstn(zlin.iloc[0,5]),zlin.iloc[0,6]
                 if (zit1=='Sw'):                    
-                    if (zti1==zti2): # This condition needs to be removed.
-                        zad1 = [zti1, zqu1, zdf1[(zdf1["Time"]==zti1-1) & (zdf1["Qubi"]==zqu2)].iloc[0,2]]
-                        zad2 = [zti2, zqu2, zdf1[(zdf1["Time"]==zti1-1) & (zdf1["Qubi"]==zqu1)].iloc[0,2]]
+                    if (zet1==zti2): # This condition needs to be removed.
+                        zad1 = [zti2, zqu2, zdf1[(zdf1["Time"]==zti2-1) & (zdf1["Qubi"]==zqu2)].iloc[0,2]]
+                        zad2 = [zet1, zeq1, zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)].iloc[0,2]]
                 else:
                     if (zit1=='iSw'):
-                        if (zti1==zti2): # This condition and the following 3 lines need to be removed.
-                            zad1 = [zti1, zqu1, zdf1[(zdf1["Time"]==zti1-1) & (zdf1["Qubi"]==zqu2)].iloc[0,2]]
-                            zad2 = [zti2, zqu2, zdf1[(zdf1["Time"]==zti1-1) & (zdf1["Qubi"]==zqu1)].iloc[0,2]]
+                        if (zet1==zti2): # This condition and the following 3 lines need to be removed.
+                            zad1 = [zti2, zqu2, zdf1[(zdf1["Time"]==zti2-1) & (zdf1["Qubi"]==zqu2)].iloc[0,2]]
+                            zad2 = [zet1, zeq1, zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)].iloc[0,2]]
                     else:
                         ztru = 0
                         try:
                             if (zit1=='C'):
-                                if (zdf1[(zdf1["Time"]==zti1-1) & (zdf1["Qubi"]==zqu1)].iloc[0,2]=="0|0|1|0"):
+                                if (zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)].iloc[0,2]=="0|0|1|0"):
                                     ztru=1
                                 else:
                                     if (zit1=='Cd'):
-                                        if (zdf1[(zdf1["Time"]==zti1-1) & (zdf1["Qubi"]==zqu1)].iloc[0,2]=="1|0|0|0"):
+                                        if (zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)].iloc[0,2]=="1|0|0|0"):
                                             ztru=1
                         except:
                             z=1
                         if (ztru==1):
-                            if (zit2 in ["H","X","Y","Z","S","T","V","Rx","Ry","Rz","Ph","Pp","U"]):
-                                zad1 = [zti2, zqu2, qmat(zit1, zdf1[(zdf1["Time"]==zti2-1) & (zdf1["Qubi"]==zqu2)].iloc[0,2])] # "1|0|0|0"
+                            if (zit2.split(" ")[0] in ["H","X","Y","Z","S","T","V","Rx","Ry","Rz","Ph","Pp","U"]):
+                                zad1 = [zti2, zqu2, qmat(zit2, zdf1[(zdf1["Time"]==zti2-1) & (zdf1["Qubi"]==zqu2)].iloc[0,2])]
                         else:
-                            if (zit1 in ["H","X","Y","Z","S","T","V","Rx","Ry","Rz","Ph","Pp","U"]):
-                                zad1 = [zti1, zqu1, qmat(zit1, zdf1[(zdf1["Time"]==zti1-1) & (zdf1["Qubi"]==zqu1)].iloc[0,2])] # "1|0|0|0"
+                            if (zit1.split(" ")[0] in ["H","X","Y","Z","S","T","V","Rx","Ry","Rz","Ph","Pp","U"]):
+                                zad1 = [zet1, zeq1, qmat(zit1, zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)].iloc[0,2])]
                             else:
                                 if (zit1 in ["O","M"]):
-                                    zad1 = [zti1, zqu1, zdf1[(zdf1["Time"]==zti1-1) & (zdf1["Qubi"]==zqu1)].iloc[0,2]] # "1|0|0|0"
+                                    zad1 = [zet1, zeq1, zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)].iloc[0,2]]
 
             if (zad1 != []): zdf1 = pd.concat([zdf1, pd.DataFrame([zad1],columns=zco1)], ignore_index=True)
             if (zad2 != []): zdf1 = pd.concat([zdf1, pd.DataFrame([zad2],columns=zco1)], ignore_index=True)
+        # print(zdf1.tail(7))
+
+    zdf1 = zdf1.sort_values(by=["Time","Qubi"])
     zdf1.to_csv("qsim.csv")
     print(zdf1)
     zblo = qblo(zdf1)
@@ -368,9 +369,9 @@ def qsim(ssgqt):
 
 # qhtm()
 # qxls()
-# txt = '1,3,0|Q 30 15,5,0|H,a,1|Y,1,2|Z,2,2|X,3,2|Y,4,2|Z,5,2|X,6,2|S,2,3|T,4,3|V,6,3|'
-# txt = txt + 'Rx 30,1,4|Ry 15,2,4|Rz 15,3,4|Rz 30,4,4|Ry 15,5,4|Rx 15,6,4|Ph 15,2,5|'
-# txt = txt + 'Pp 30,4,5|O,a,6|Cd,1,7,Ph 15,2,7|K,3,7|U 30 30 15,4,7|U 15 15 30,6,7|'
-# txt = txt + 'C,1,8,X,2,9|Sw,4,8,Sw,6,8|iSw,3,9,iSw,4,9|M,a,10'
+txt = '1,3,0|Q 30 15,5,0|H,a,1|Y,1,2|Z,2,2|X,3,2|Y,4,2|Z,5,2|X,6,2|S,2,3|T,4,3|V,6,3|'
+txt = txt + 'Rx 30,1,4|Ry 15,2,4|Rz 15,3,4|Rz 30,4,4|Ry 15,5,4|Rx 15,6,4|Ph 15,2,5|'
+txt = txt + 'Pp 30,4,5|O,a,6|Cd,1,7,Ph 15,2,7|U 30 30 15,4,7|U 15 15 30,6,7|'
+txt = txt + 'C,1,8,X,2,9|Sw,4,8,Sw,6,8|iSw,3,9,iSw,4,9|M,a,10'
 # qplt(txt)
 # qsim(txt)
