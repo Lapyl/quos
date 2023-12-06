@@ -135,7 +135,7 @@ def qplt(ssgqt):
 
 def qstn(zabc, tint=True):
     """
-    To create a number-type string into an integer or a float
+    For help to create a number-type string into an integer or a float
     Output: Integer or float
     zabc  : Number-type string
     tint  : True for integer output
@@ -149,12 +149,23 @@ def qstn(zabc, tint=True):
         return 0
 #=====================================================================================================
 
-def qmat(xS, xT):
+def qnta(zq0r, zq0i, zq1r, zq1i):
+    """
+    For help to cpnvert a qubit state numbers string into a a qubit state angles string
+    Output             : Qubit state angles string theta|phi
+    zq0r,zq0i,zq1r,zqi1: Real and imaginary parts of qubit state |0> and |1>
+    """
+    ztha = round(90 + 90 * (-zq0r * zq0r - zq0i * zq0i + zq1r * zq1r + zq1i * zq1i) / (zq0r * zq0r + zq0i * zq0i + zq1r * zq1r + zq1i * zq1i), 4)
+    zphi = round(90 * (zq0r * zq0i + zq0r * zq1i + zq1r * zq0i + zq1r * zq1i) / (zq0r * zq0r + zq0i * zq0i + zq1r * zq1r + zq1i * zq1i), 4)
+    return [ztha, zphi]
+#=====================================================================================================
+
+def qmat(xS, zq0r, zq0i, zq1r, zq1i):
     """
     For help to multiply a matrix and a vector to generate a vector
-    Output: String for a qubit's 0r 0i 1r 1i parts
-    xS    : String for a quantum gate's code, qubit serial number, and time serial number
-    xT    : String for a qubit's 0r 0i 1r 1i parts
+    Output             : String for a qubit's 0r 0i 1r 1i parts
+    xS                 : String for a quantum gate's code, qubit serial number, and time serial number
+    zq0r,zq0i,zq1r,zqi1: Real and imaginary parts of qubit state |0> and |1>
     """
     xPi = math.pi
     zchk = (xS + " ").split(" ")[0]
@@ -196,25 +207,24 @@ def qmat(xS, xT):
     else:
         xA = [1, 0, 0, 0, 1, 0, 0, 0]
 
-    xB = (xT + "||||").split("|")
-    xmat = str(round(float(xA[0])*float(xB[0]) - float(xA[1])*float(xB[1]) + float(xA[2])*float(xB[2]) - float(xA[3])*float(xB[3]), 4)) + "|"
-    xmat = xmat + str(round(float(xA[0])*float(xB[1]) + float(xA[1])*float(xB[0]) + float(xA[2])*float(xB[3]) + float(xA[3])*float(xB[2]), 4)) + "|"
-    xmat = xmat + str(round(float(xA[4])*float(xB[0]) - float(xA[5])*float(xB[1]) + float(xA[6])*float(xB[2]) - float(xA[7])*float(xB[3]), 4)) + "|"
-    xmat = xmat + str(round(float(xA[4])*float(xB[1]) + float(xA[5])*float(xB[0]) + float(xA[6])*float(xB[3]) + float(xA[7])*float(xB[2]), 4))
-    return xmat
+    xre0 = str(round(float(xA[0])*float(zq0r) - float(xA[1])*float(zq0i) + float(xA[2])*float(zq1r) - float(xA[3])*float(zq1i), 4))
+    xre1 = str(round(float(xA[0])*float(zq0i) + float(xA[1])*float(zq0r) + float(xA[2])*float(zq1i) + float(xA[3])*float(zq1r), 4))
+    xre2 = str(round(float(xA[4])*float(zq0r) - float(xA[5])*float(zq0i) + float(xA[6])*float(zq1r) - float(xA[7])*float(zq1i), 4))
+    xre3 = str(round(float(xA[4])*float(zq0i) + float(xA[5])*float(zq0r) + float(xA[6])*float(zq1i) + float(xA[7])*float(zq1r), 4))
+    return xre0, xre1, xre2, xre3
 #=====================================================================================================
 
-def qblo(dtqr):
+def qblo(dtqa):
     """
     For help to plot Bloch spheres for a dataframe of qubits
     Output: Matplotlib plot of Bloch sphere
     dtqr  : Pandas dataframe of t, q, r
     t     : Positive integer denoting opertation time sequence number    
     q     : Character or positive integer denoting qudit sequence number
-    r     : "0r|0i|1r|1i" string of real and imaginary parts of qubit states 0 and 1
+    a     : Bloch angles theta and phi of qubit states 0 and 1
     """
-    ztmx = int(dtqr['Time'].max())+1
-    zque = dtqr['Qubi'].unique()
+    ztmx = int(dtqa['Time'].max())+1
+    zque = dtqa['Qubi'].unique()
     zquc = len(zque)
     zfig, zaxs = plt.subplots(zquc, ztmx)
     zavs = 3.1457/6.0 #Angle between vertical and slented lines
@@ -242,27 +252,14 @@ def qblo(dtqr):
             zaxe.plot([1.0,2.2], [1.0,1.0], color='gray', lw=zlwt)
             zaxe.plot([1.0,0.6], [1.0,0.6], color='gray', lw=zlwt)
             
-            if (len(dtqr[(dtqr['Time']==ztim) & (dtqr['Qubi']==zquv)])>0):
+            dtqf = dtqa[(dtqa['Time']==ztim) & (dtqa['Qubi']==zquv)]
+            if (len(dtqf)>0):
 
-                zres = (dtqr[(dtqr['Time']==ztim) & (dtqr['Qubi']==zquv)].iloc[0,2]).split("|")
-                zq0r = qstn(zres[0], False)
-                zq0i = qstn(zres[1], False)
-                zq1r = qstn(zres[2], False)
-                zq1i = qstn(zres[3], False)
-
-                try:
-                    ztha = round(1.57285 + 1.57285 * (zq0r * zq0r + zq0i * zq0i - zq1r * zq1r - zq1i * zq1i) / (
-                        zq0r * zq0r + zq0i * zq0i + zq1r * zq1r + zq1i * zq1i), 4)
-                    zphi = round(1.57285 * (zq0r * zq0i + zq0r * zq1i + zq1r * zq0i + zq1r * zq1i) / (
-                        zq0r * zq0r + zq0i * zq0i + zq1r * zq1r + zq1i * zq1i), 4)
-                except:
-                    ztha = 0.0
-                    zphi = 0.0
-                zphj = round(zphi - zavs * math.sin(zphi), 4)
-                zxad = round(math.sin(ztha) * math.cos(zphj), 4)
-                zyad = -round(math.cos(ztha), 4)
-
-                # print(str(ztim) + " " + zquv + " " + str(zq0r) + " " + str(zq0i) + " " + str(zq1r) + " " + str(zq1i) + " " + str(ztha) + " " + str(zphi) + " " + str(zphj) + " " + str(zxad) + " " + str(zyad))
+                ztha = round(dtqf.iloc[0,2] * 3.1457/180.0, 4)
+                zphi = round(dtqf.iloc[0,3] * 3.1457/180.0, 4)
+                zphj = round(zphi - zavs * (1 - math.sin(zavs)) * (1 - math.sin(zphi)), 4)
+                zxad = round(math.sin(ztha) * math.sin(zphj), 4)
+                zyad = round(math.cos(ztha) - 0.6*math.sin(ztha) * math.cos(zphj) / 2, 4)
                 zaxe.plot([1.0,1.0+zxad], [1.0,1.0+zyad], color="red", lw=3.0)
                 if (zlwt==1.0): zlwt=0.1
 
@@ -281,97 +278,109 @@ def qsim(ssgqt):
     q     : Positive integer denoting qudit sequence number
     t     : Positive integer denoting opertation time sequence number
     """
-    zco0 = ['Item1','Qubi1','Time1','Item2','Qubi2','Time2','Resu']
-    zco1 = ['Time','Qubi','Resu']
+    zco0 = ['Item1','Qubi1','Time1','Item2','Qubi2','Time2']
+    zco1 = ['Time','Qubi','Zq0r','Zq0i','Zq1r','Zq1i']
     zdf0 = pd.DataFrame(columns=zco0)
     zdf1 = pd.DataFrame(columns=zco1)
 
     for sgqt in ssgqt.split('|'):
         agqt = (sgqt + ",,,,,").split(",")
         i1, q1, t1, i2, q2, t2 = agqt[0], agqt[1], qstn(agqt[2]), agqt[3], agqt[4], qstn(agqt[5])
-        zdf0 = pd.concat([zdf0, pd.DataFrame([[i1, q1, t1, i2, q2, t2, ""]], columns=zco0)], ignore_index=True)
+        zdf0 = pd.concat([zdf0, pd.DataFrame([[i1, q1, t1, i2, q2, t2]], columns=zco0)], ignore_index=True)
     zlt1 = zdf0["Time1"].unique()
     zlq1 = zdf0[zdf0["Qubi1"] != "a"]["Qubi1"].unique()
     for zet1 in zlt1:
         zdfa = zdf0[(zdf0["Qubi1"]=="a") & (zdf0["Time1"]==zet1)][zco0]
         if len(zdfa)>0:
             for zeq1 in zlq1:
-                zdf0 = pd.concat([zdf0, pd.DataFrame([[zdfa.iloc[0,0], zeq1, zet1, "", "", 0, ""]], columns=zco0)], ignore_index=True)
+                zdf0 = pd.concat([zdf0, pd.DataFrame([[zdfa.iloc[0,0], zeq1, zet1, "", "", 0]], columns=zco0)], ignore_index=True)
 
     zls1 = zdf0[(zdf0["Item1"]=="1") & (zdf0["Time1"]==0)]["Qubi1"].unique()
     zdfq = zdf0[(zdf0["Item1"].map(lambda x: x.startswith('Q'))) & (zdf0["Time1"]==0)]
     if len(zdfq)>0:
         for zeqq in range(len(zdfq)):
-            zag1 = float(zdfq.iloc[zeqq,0].split(" ")[1])
-            zag2 = float(zdfq.iloc[zeqq,0].split(" ")[2])
-            zres = str(round(math.cos(zag1)*math.cos(zag2),4)) + "|" + str(round(math.cos(zag1)*math.sin(zag2),4)) + "|" + str(round(math.sin(zag1)*math.cos(zag2),4)) + "|" + str(round(math.sin(zag1)*math.sin(zag2),4))
-            zdf1 = pd.concat([zdf1, pd.DataFrame([[0, zdfq.iloc[zeqq,1], zres]], columns=zco1)], ignore_index=True)
+            zag1 = round(float(zdfq.iloc[zeqq,0].split(" ")[1]) * 3.1457/180.0, 4)
+            zag2 = round(float(zdfq.iloc[zeqq,0].split(" ")[2]) * 3.1457/180.0, 4)
+            zdf1 = pd.concat([zdf1, pd.DataFrame([[0, zdfq.iloc[zeqq,1], round(math.cos(zag1)*math.cos(zag2),4),
+                             round(math.cos(zag1)*math.sin(zag2),4), round(math.sin(zag1)*math.cos(zag2),4),
+                             round(math.sin(zag1)*math.sin(zag2),4)]], columns=zco1)], ignore_index=True)
+            
+            zdf1['Zags'] = zdf1.apply(lambda x: qnta(qstn(x.Zq0r,False),qstn(x.Zq0i,False),qstn(x.Zq1r,False),qstn(x.Zq1i,False)), axis=1)        
     if len(zls1)>0:
-        for zeq1 in zls1:        
-            zdf1 = pd.concat([zdf1, pd.DataFrame([[0, zeq1, "0|0|1|0"]], columns=zco1)], ignore_index=True)
+        for zeq1 in zls1:
+            zdf1 = pd.concat([zdf1, pd.DataFrame([[0, zeq1,  0, 0, 1, 0]], columns=zco1)], ignore_index=True)
     for zeqa in zlq1:
         if ((zeqa not in zls1) & (zeqa not in zdfq["Qubi1"].unique())):
-            zdf1 = pd.concat([zdf1, pd.DataFrame([[0, zeqa, "1|0|0|0"]], columns=zco1)], ignore_index=True)
+            zdf1 = pd.concat([zdf1, pd.DataFrame([[0, zeqa,  1, 0, 0, 0]], columns=zco1)], ignore_index=True)
     
     for zet1 in range(1, int(zlt1.max())+1):
         for zeq1 in zlq1:
             zlin = zdf0[(zdf0["Time1"]==zet1) & (zdf0["Qubi1"]==zeq1)][zco0]
+            zcur = zdf1[(zdf1["Time"]==zet1) & (zdf1["Qubi"]==zeq1)]
+            zpre = zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)]
             zad1 = []
             zad2 = []
-            if (len(zdf1[(zdf1["Time"]==zet1) & (zdf1["Qubi"]==zeq1)])<1):
+            if (len(zcur)<1):
                 try:
-                    zad1 = [zet1, zeq1, zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)].iloc[0,2]]
+                    zad1 = [zet1, zeq1, zpre.iloc[0,2], zpre.iloc[0,3], zpre.iloc[0,4], zpre.iloc[0,5]]
                 except:
-                    zad1 = [zet1, zeq1, "0|0|0|0"]
+                    zad1 = [zet1, zeq1, 1, 0, 0, 0]
             if (zlin.shape[0]>0):
-                zit1,zit2,zqu2,zti2,zres = zlin.iloc[0,0],zlin.iloc[0,3],zlin.iloc[0,4],qstn(zlin.iloc[0,5]),zlin.iloc[0,6]
+                zit1,zit2,zqu2,zti2 = zlin.iloc[0,0],zlin.iloc[0,3],zlin.iloc[0,4],qstn(zlin.iloc[0,5])
+                zprx = zdf1[(zdf1["Time"]==zti2-1) & (zdf1["Qubi"]==zqu2)]
                 if (zit1=='Sw'):                    
-                    if (zet1==zti2): # This condition needs to be removed.
-                        zad1 = [zti2, zqu2, zdf1[(zdf1["Time"]==zti2-1) & (zdf1["Qubi"]==zqu2)].iloc[0,2]]
-                        zad2 = [zet1, zeq1, zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)].iloc[0,2]]
+                    if (zet1==zti2):
+                        zad1 = [zti2, zqu2, zprx.iloc[0,2], zprx.iloc[0,3], zprx.iloc[0,4], zprx.iloc[0,5]]
+                        zad2 = [zet1, zeq1, zpre.iloc[0,2], zpre.iloc[0,3], zpre.iloc[0,4], zpre.iloc[0,5]]
                 else:
                     if (zit1=='iSw'):
-                        if (zet1==zti2): # This condition and the following 3 lines need to be removed.
-                            zad1 = [zti2, zqu2, zdf1[(zdf1["Time"]==zti2-1) & (zdf1["Qubi"]==zqu2)].iloc[0,2]]
-                            zad2 = [zet1, zeq1, zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)].iloc[0,2]]
+                        if (zet1==zti2):
+                            zad1 = [zti2, zqu2, zprx.iloc[0,2], zprx.iloc[0,3], zprx.iloc[0,4], zprx.iloc[0,5]]
+                            zad2 = [zet1, zeq1, zpre.iloc[0,2], zpre.iloc[0,3], zpre.iloc[0,4], zpre.iloc[0,5]]
                     else:
                         ztru = 0
                         try:
                             if (zit1=='C'):
-                                if (zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)].iloc[0,2]=="0|0|1|0"):
+                                if ([zpre.iloc[0,2], zpre.iloc[0,3], zpre.iloc[0,4], zpre.iloc[0,5]]==[0, 0, 1, 0]):
                                     ztru=1
                                 else:
                                     if (zit1=='Cd'):
-                                        if (zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)].iloc[0,2]=="1|0|0|0"):
+                                        if ([zpre.iloc[0,2], zpre.iloc[0,3], zpre.iloc[0,4], zpre.iloc[0,5]]==[1, 0, 0, 0]):
                                             ztru=1
                         except:
                             z=1
                         if (ztru==1):
                             if (zit2.split(" ")[0] in ["H","X","Y","Z","S","T","V","Rx","Ry","Rz","Ph","Pp","U"]):
-                                zad1 = [zti2, zqu2, qmat(zit2, zdf1[(zdf1["Time"]==zti2-1) & (zdf1["Qubi"]==zqu2)].iloc[0,2])]
+                                zres = qmat(zit2, zprx.iloc[0,2], zprx.iloc[0,3], zprx.iloc[0,4], zprx.iloc[0,5])
+                                zad1 = [zti2, zqu2, zres, zres[0], zres[1]. zres[2], zres[3]]
                         else:
                             if (zit1.split(" ")[0] in ["H","X","Y","Z","S","T","V","Rx","Ry","Rz","Ph","Pp","U"]):
-                                zad1 = [zet1, zeq1, qmat(zit1, zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)].iloc[0,2])]
+                                zres = qmat(zit1, zpre.iloc[0,2], zpre.iloc[0,3], zpre.iloc[0,4], zpre.iloc[0,5])
+                                zad1 = [zet1, zeq1, zres[0], zres[1], zres[2], zres[3]]
                             else:
                                 if (zit1 in ["O","M"]):
-                                    zad1 = [zet1, zeq1, zdf1[(zdf1["Time"]==zet1-1) & (zdf1["Qubi"]==zeq1)].iloc[0,2]]
+                                    zad1 = [zet1, zeq1, zpre.iloc[0,2], zpre.iloc[0,3], zpre.iloc[0,4], zpre.iloc[0,5]]
 
             if (zad1 != []): zdf1 = pd.concat([zdf1, pd.DataFrame([zad1],columns=zco1)], ignore_index=True)
             if (zad2 != []): zdf1 = pd.concat([zdf1, pd.DataFrame([zad2],columns=zco1)], ignore_index=True)
-        # print(zdf1.tail(7))
 
-    zdf1 = zdf1.sort_values(by=["Time","Qubi"])
+    zdf1['Zags'] = zdf1.apply(lambda x: qnta(qstn(x.Zq0r,False),qstn(x.Zq0i,False),qstn(x.Zq1r,False),qstn(x.Zq1i,False)), axis=1)
+    zdf1['Zag1'] = zdf1['Zags'].apply(lambda x: x[0])
+    zdf1['Zag2'] = zdf1['Zags'].apply(lambda x: x[1])
+    zdf1 = zdf1[['Time','Qubi','Zag1','Zag2','Zq0r','Zq0i','Zq1r','Zq1i']]
+    zdf1 = zdf1.sort_values(by=['Time','Qubi'])
     zdf1.to_csv("qsim.csv")
-    print(zdf1)
-    zblo = qblo(zdf1)
+    zblo = qblo(zdf1[['Time','Qubi','Zag1','Zag2']])
     return zdf1, zblo
 #=====================================================================================================
 
-# qhtm()
-# qxls()
-txt = '1,3,0|Q 30 15,5,0|H,a,1|Y,1,2|Z,2,2|X,3,2|Y,4,2|Z,5,2|X,6,2|S,2,3|T,4,3|V,6,3|'
+'''
+qhtm()
+qxls()
+txt = '1,3,0|Q 30 60,5,0|H,a,1|Y,1,2|Z,2,2|X,3,2|Y,4,2|Z,5,2|X,6,2|S,2,3|T,4,3|V,6,3|'
 txt = txt + 'Rx 30,1,4|Ry 15,2,4|Rz 15,3,4|Rz 30,4,4|Ry 15,5,4|Rx 15,6,4|Ph 15,2,5|'
 txt = txt + 'Pp 30,4,5|O,a,6|Cd,1,7,Ph 15,2,7|U 30 30 15,4,7|U 15 15 30,6,7|'
-txt = txt + 'C,1,8,X,2,9|Sw,4,8,Sw,6,8|iSw,3,9,iSw,4,9|M,a,10'
-# qplt(txt)
-# qsim(txt)
+txt = txt + 'C,1,8,X,2,8|Sw,4,8,Sw,6,8|iSw,3,9,iSw,4,9|M,a,10'
+qplt(txt)
+qsim(txt)
+'''
