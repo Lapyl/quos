@@ -84,9 +84,9 @@ These gates can work for qudits after some modifications.
 ### Example string to represemt a quantum circuit
 
     txt = '1,3,0|Q 30 60,5,0|H,a,1|Y,1,2|Z,2,2|X,3,2|Y,4,2|Z,5,2|X,6,2|S,2,3|T,4,3|V,6,3|'
-    txt = txt + 'Rx 30,1,4|Ry 15,2,4|Rz 15,3,4|Rz 30,4,4|Ry 15,5,4|Rx 15,6,4|Ph 15,2,5|'
-    txt = txt + 'Pp 30,4,5|O,a,6|Cd,1,7,Ph 15,2,7|U 30 30 15,4,7|U 15 15 30,6,7|'
-    txt = txt + 'C,1,8,X,2,8|Sw,4,8,Sw,6,8|iSw,3,9,iSw,4,9|M,a,10'
+    txt = txt + 'Rx 30,1,4|Ry 15,2,4|Rz 15,3,4|Rz 30,4,4|Ry 15,5,4|Rx 15,6,4|'
+    txt = txt + 'Ph 15,2,5|Pp 30,4,5|C,2,6,C,5,6,X,3,6|Cd,1,7,Ph 15,2,7|U 30 30 15,4,7|'
+    txt = txt + 'U 15 15 30,6,7|C,1,8,X,2,8|Sw,4,8,Sw,6,8|iSw,3,9,iSw,4,9|M,a,10|'
 
 - 1 (qubit 1) on qubit 3 at time 0
 - Q 30 60 (qubit with angles 30 60) on qubit 5 at time 0
@@ -94,16 +94,16 @@ These gates can work for qudits after some modifications.
 - H (Hadamard gate) on all qubits at time 1
 - Y (Pauli Y gate) on qubit 1 at time 2 ...
 - S (S gate) on qubit 2 at time 3 ...
-- Rx 30 (rotation by 30 around X) on qubit 2 at time 4 ...
+- Rx 30 (rotation by 30 around X) on qubit 1 at time 4 ...
 - Ph 15 (global phase gate by 15) on qubit 2 at time 5
 - Pp 30 (phase gate for second state by 30) on qubit 4 at time 5
-- O (Observer gate) on all qubits at time 6
-- Cd (reverse control point) on qubit 1 at time 7 controlling Ph 15 on qubit 2 at time 7
+- C (control points) on qubits 2 and 5 at time 6 controlling X on qubit 3
+- Cd (reverse control point) on qubit 1 at time 7 controlling Ph 15 on qubit 2
 - U 30 30 15 (rotation by 30 30 15 around X Y Z) on qubit 4 at time 7 ...
-- C (control point) on qubit 1 at time 8 controlling X on qubit 2 at time 8
-- Sw (swap) qubit 4 at time 8 with qubit 6 at time 8
-- iSw (imaginary swap) qubit 3 at time 9 with qubit 4 at time 9
-- M (Measurement gate) on all qubits at time 10
+- C (control point) on qubit 1 at time 8 controlling X on qubit 2
+- Sw (swap) on qubits 4 and 6 at time 8
+- iSw (imaginary swap) on qubits 3 and 4 at time 9
+- M (measurement gate) on all qubits at time 10
 
 ### qplt to create a plot of a quantum circuit based on a string
 
@@ -136,3 +136,4 @@ These gates can work for qudits after some modifications.
 - 0.0.12 2023-11-29 Enabled simulation and Bloch spheres
 - 0.0.13 2023-12-02 Improved simulation and Bloch spheres
 - 0.0.14 2023-12-05 Improved simulation and Excel files
+- 0.0.15 2023-12-06 Enabled Toffoli gates
