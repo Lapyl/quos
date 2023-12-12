@@ -2,7 +2,6 @@ LICENSE
 README.md
 setup.py
 quos/__init__.py
-quos/qblo.xlsm
 quos/quos.html
 quos/quos.xlsm
 quos.egg-info/PKG-INFO
@@ -16,9 +15,7 @@ quos/icons/C.jpg
 quos/icons/Cd.jpg
 quos/icons/H.jpg
 quos/icons/I.jpg
-quos/icons/K.jpg
 quos/icons/M.jpg
-quos/icons/O.jpg
 quos/icons/Ph.jpg
 quos/icons/Pp.jpg
 quos/icons/Q.jpg
